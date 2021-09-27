@@ -1,0 +1,3 @@
+#index:
+#    path: /add
+#    controller: App\Controller\PostController::addPostAction
