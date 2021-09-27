@@ -12,17 +12,9 @@ class PostController extends AbstractController
     /**
      * @Route ("/", name="home_page")
      */
-    public function show(Request $request)
+    public function read(Request $request)
     {
 
-//        if(!empty($request -> get('text'))){
-//            $entityManager = $this -> getDoctrine() -> getManager();
-//            $post = new Post;
-//            $post -> setText('First Post');
-//
-//            $entityManager -> persist($post);
-//            $entityManager-> flush();
-//        }
         $posts = $this -> getDoctrine() -> getRepository(Post::class) ->findAll();
 
         return $this->render('post/index.html.twig', ['posts'=>$posts]);
@@ -30,19 +22,69 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route ("/add/", name="add")
+     * @Route ("/create", name="create")
      */
-    public function add()
+    public function create()
     {
-         $entityManager = $this -> getDoctrine() -> getManager();
-        $post = new Post;
-        $post -> setText('First Post');
+        $request = Request::createFromGlobals();
+        $text = $request -> get('text');
 
-        $entityManager -> persist($post);
-        $entityManager-> flush();
+        if($text)
+        {
+            $entityManager = $this -> getDoctrine() -> getManager();
+            $post = new Post;
+            $post -> setText($text);
+
+            $entityManager -> persist($post);
+            $entityManager -> flush();
+
+            return $this -> redirectToRoute('home_page');
+        }
+
 
         return $this -> render('post/add.html.twig');
     }
+    /**
+     * @Route ("/update/{id}", name="update")
+     */
+    public function update(int $id)
+    {
+        $entityManager = $this -> getDoctrine() -> getManager();
+        $post = $entityManager -> getRepository(Post::class) -> find($id);
+
+        $request = Request::createFromGlobals();
+        $updatedText = $request -> get('text');
+
+
+        if(isset($post) && isset($updatedText))
+        {
+            $post ->setText($updatedText);
+            $entityManager -> flush();
+            return $this -> redirectToRoute('home_page');
+        }
+
+        return $this -> render('post/update.html.twig', ['post'=>$post]);
+    }
+
+    /**
+     * @Route ("/delete/{id}", name="delete")
+     */
+
+    public function delete($id)
+    {
+        $entityManager = $this -> getDoctrine() -> getManager();
+        $post = $entityManager -> getRepository(Post::class) -> find($id);
+
+        if($post)
+        {
+            $entityManager -> remove($post);
+            $entityManager -> flush();
+            return $this -> redirectToRoute('home_page');
+        }
+
+        return $this -> redirectToRoute('home_page');
+    }
+
 
 
 }

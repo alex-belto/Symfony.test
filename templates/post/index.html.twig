@@ -4,7 +4,9 @@
 
     <h1>Hello</h1>
     {% for post in posts %}
-        {{ post.text }}<br>
+        {{ post.text }}
+        <a href="{{ path('delete', {'id': post.id}) }}">Удалить</a>
+        <a href="{{ path('update', {'id': post.id}) }}">Изменить</a><br>
     {% endfor %}
 
 {% endblock %}
