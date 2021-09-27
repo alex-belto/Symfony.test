@@ -44,15 +44,5 @@ class PostController extends AbstractController
         return $this -> render('post/add.html.twig');
     }
 
-//    public function addPostAction()
-//    {
-//        $entityManager = $this -> getDoctrine() -> getManager();
-//        $post = new Post;
-//        $post -> setText('First Post');
-//
-//        $entityManager -> persist($post);
-//        $entityManager-> flush();
-//
-//        return $this -> render('post/add.html.twig');
-//    }
+
 }
